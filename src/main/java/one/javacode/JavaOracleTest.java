@@ -14,15 +14,16 @@ public class JavaOracleTest {
 
 	public static void main(String [] args)
 	{
-		int row; // n stores the number of rows affected by insert, update or delete
-		int opt;// for user choice switch case
+		int row; 
+		int opt;
 		
 		try
 		{
-			String username="scott",password="tiger";
-			// Load the driver class
+			String username="scott";
+			String password="tiger";
+			
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			// Create the connection object
+			
 			String url="jdbc:oracle:thin:@localhost:1521:orcl";
 			Connection  con=DriverManager.getConnection(url, username, password);
 			Statement stmt=con.createStatement();
@@ -40,7 +41,7 @@ public class JavaOracleTest {
 			switch(opt)
 			{
 		
-			case 1://inserting records in customer table
+			case 1:
 				
 				System.out.println("enter the name of the customer");
 				String name=br.readLine();
@@ -48,7 +49,7 @@ public class JavaOracleTest {
 				long phoneno=Long.parseLong(br.readLine());
 				System.out.println("enter the city of the customer");
 				String city=br.readLine();
-				System.out.println("enter the initial balance");
+				System.out.println("enter some money first");
 				String bal=br.readLine();
 				System.out.println("enter your aadhar number");
 				String accno=br.readLine();
@@ -64,8 +65,7 @@ public class JavaOracleTest {
 				
 				
 				
-				row=stmt.executeUpdate(insstr);// n returns the number of rows added2
-				
+				row=stmt.executeUpdate(insstr);
 				System.out.println("Thankyou for choosing our bank to open an account"+name+"\n"+"Your account has opened"+"\n");
 				}catch(Exception e  ) {
 					System.out.println("you have entered wrong details"+ e);
@@ -73,16 +73,15 @@ public class JavaOracleTest {
 				
 				
 				break;
-//		
-			case 2: //Show Account Details of a Customer
+		
+			case 2: 
 				System.out.println("enter the Account No of the customer");
 				String acc=br.readLine(); 
 				String sql1="select * from CUSTOMER   where accno='"+acc+"'";
-				ResultSet rs1=stmt.executeQuery(sql1);// ResultSet reference is a matrix
-//				System.out.println("\nCUST_NO\tNAME\t\tPHONE_NO\tCITY\tACC_NO\tTYPE\tBALANCE\tBR_CODE\tBRANCH_NAME\tBRANCH_CITY\n");
+				ResultSet rs1=stmt.executeQuery(sql1);			
 				while(rs1.next())
 				{	
-					System.out.print(rs1.getString(1)+"\t");// these indices are the column number of the column
+					System.out.print(rs1.getString(1)+"\t");
 					System.out.print(rs1.getString(2)+"\t");
 					System.out.print(rs1.getString(3)+"\t");
 					System.out.print(rs1.getString(4)+"\t");
@@ -90,27 +89,27 @@ public class JavaOracleTest {
 					
 				}
 			break;
-			case 3://Deposit Money to an Account
+			case 3:
 				System.out.println("enter the account number");
-				 acc=br.readLine();
+				  acc=br.readLine();
 				System.out.println("enter the amount to be deposited");
 				int amt=Integer.parseInt(br.readLine());
 				String sql2="select TOTAL_BAL from CUSTOMER where accno='"+acc+"'";
-				ResultSet rs2=stmt.executeQuery(sql2);// ResultSet reference is a matrix
+				ResultSet rs2=stmt.executeQuery(sql2);
 				
 				
 				
 				
 				String updstr="update CUSTOMER set TOTAL_BAL=TOTAL_BAL+"+amt+" where accno='"+acc+"'";
-				row=stmt.executeUpdate(updstr);// n returns the number of rows added
-				//System.out.println("\n"+n+" rows updated\n");
+				row=stmt.executeUpdate(updstr);
+				
 				String sql3="select TOTAL_BAL from CUSTOMER where accno='"+acc+"'";
-				ResultSet rs3=stmt.executeQuery(sql3);// ResultSet reference is a matrix
-				System.out.print("Updated balance is: \t");
+				ResultSet rs3=stmt.executeQuery(sql3);
+				System.out.print("balance is: \t");
 				while(rs3.next())
 					System.out.println(rs3.getString("TOTAL_BAL")+"\n");
 			break;
-			case 4://Withdraw Money from an Account
+			case 4:
 				int bal8=0;
 				System.out.println("enter the account number");
 				String acc1=br.readLine();
@@ -120,25 +119,27 @@ public class JavaOracleTest {
 				ResultSet rs4=stmt.executeQuery(sql4);// ResultSet reference is a matrix
 				System.out.print("Previous balance is: \t");
 				while(rs4.next())
+					
 				{
 					System.out.println(rs4.getString("TOTAL_BAL")+"\n");
 					bal8=Integer.parseInt(rs4.getString("TOTAL_BAL"));
+					
 				}
 				if(bal8>=amt2)
 				{
-					updstr="update CUSTOMER set TOTAL_BAL=TOTAL_BAL-"+amt2+" where accno='"+acc1+"'";// sql query
-					row=stmt.executeUpdate(updstr);// n returns the number of rows added
-					//System.out.println("\n"+n+" rows updated\n");
-					String sqlstr82="select TOTAL_BAL from CUSTOMER where accno='"+acc1+"'";
-					ResultSet rs82=stmt.executeQuery(sqlstr82);// ResultSet reference is a matrix
+					updstr="update CUSTOMER set TOTAL_BAL=TOTAL_BAL-"+amt2+" where accno='"+acc1+"'";
+					row=stmt.executeUpdate(updstr);
+					String sql5="select TOTAL_BAL from CUSTOMER where accno='"+acc1+"'";
+					ResultSet rs5=stmt.executeQuery(sql5);// ResultSet reference is a matrix
 					System.out.print("Updated balance is: \t");
-					while(rs82.next())
-					System.out.println(rs82.getString("TOTAL_BAL")+"\n");
+					while(rs5.next())
+					System.out.println(rs5.getString("TOTAL_BAL")+"\n");
 				}
 				else
-					System.out.println("Insufficient Balance !!!!!\n");
+					System.out.println("Insufficient Balance!\n");
+				
 			break;
-			case 5: //exit case
+			case 5: 
 				stmt.close();
 				con.close();
 				System.out.println("\nThank you\n");
@@ -146,10 +147,10 @@ public class JavaOracleTest {
 				break;
 			default:
 				System.out.println("\nWrong choice\n");
-				}// end of switch case
-			}// end of do block
-			while(opt!=9);			
-		}// end of try block
+				}
+			}
+			while(opt!=5);			
+		}
 		catch(Exception e)
 		{
 			System.out.println(e);
